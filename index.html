@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Advanced AI-powered exoplanet detection system using NASA data">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Video Backgrounds Container -->
+    <div class="video-backgrounds">
+        <!-- Main Galaxy Background -->
+        <video class="background-video active" autoplay muted loop playsinline id="galaxyVideo">
+            <source src="C:\Users\chhav\Downloads\Stellar Scout\frontend\videos\galaxy.mp4" type="video/mp4">
+            <!-- Fallback -->
+            <source src="https://cdn.pixabay.com/video/2024/10/12/236105_large.mp4" type="video/mp4">
+        </video>
+        
+        <!-- Secondary Nebula Background (for variety) -->
+        <video class="background-video" autoplay muted loop playsinline id="nebulaVideo">
+            <source src="C:\Users\chhav\Downloads\Stellar Scout\frontend\videos\nebula.mp4" type="video/mp4">
+        </video>
+        
+        <!-- Video Overlay -->
+        <div class="video-overlay"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-icon">🌟</span>
+            <span class="logo-text">STELLAR SCOUT</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home">HOME</a></li>
+            <li><a href="#explorer">EXPLORER</a></li>
+            <li><a href="#ai-lab">AI LAB</a></li>
+            <li><a href="#lightcurve">LIGHT CURVE</a></li>
+            <li><a href="#simulator">SIMULATOR</a></li>
+            <li><a href="#visualizations">DATA</a></li>
+            <li><a href="#about">ABOUT</a></li>
+        </ul>
+        <div class="menu-toggle" id="menuToggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">STELLAR SCOUT</h1>
+            <p class="hero-subtitle">YOUR SPACE EXPERT</p>
+            <p class="hero-description">Hunting Exoplanets with Advanced AI & Real NASA Data</p>
+            <div class="hero-buttons">
+                <button class="cta-button primary" onclick="scrollToSection('explorer')">
+                    EXPLORE PLANETS
+                    <span class="button-arrow">→</span>
+                </button>
+                <button class="cta-button secondary" onclick="scrollToSection('lightcurve')">
+                    ANALYZE DATA
+                    <span class="button-icon">📊</span>
+                </button>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-dot"></div>
+        </div>
+        
+        <!-- Enhanced Live Stats -->
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-icon">🪐</div>
+                <div class="stat-number" id="totalExoplanets">---</div>
+                <div class="stat-label">CONFIRMED EXOPLANETS</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">🌍</div>
+                <div class="stat-number" id="habitableExoplanets">---</div>
+                <div class="stat-label">POTENTIALLY HABITABLE</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">✨</div>
+                <div class="stat-number" id="recentDiscoveries">---</div>
+                <div class="stat-label">RECENT DISCOVERIES</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">🤖</div>
+                <div class="stat-number">95%+</div>
+                <div class="stat-label">AI ACCURACY</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exoplanet Explorer Section -->
+    <section id="explorer" class="explorer-section">
+        <div class="section-header">
+            <h2 class="section-title">EXOPLANET EXPLORER</h2>
+            <p class="section-subtitle">Browse 5,500+ confirmed exoplanets from NASA</p>
+        </div>
+
+        <!-- Advanced Search and Filters -->
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search by planet or star name...">
+                <button class="search-btn" onclick="searchExoplanets()">
+                    <span>🔍</span>
+                </button>
+            </div>
+            
+            <div class="filter-controls">
+                <select id="methodFilter" onchange="applyFilters()">
+                    <option value="">All Methods</option>
+                    <option value="Transit">Transit</option>
+                    <option value="Radial Velocity">Radial Velocity</option>
+                    <option value="Imaging">Direct Imaging</option>
+                    <option value="Microlensing">Microlensing</option>
+                </select>
+                
+                <input type="number" id="minRadiusFilter" placeholder="Min Radius (Earth)" 
+                       step="0.1" onchange="applyFilters()">
+                
+                <input type="number" id="maxRadiusFilter" placeholder="Max Radius (Earth)" 
+                       step="0.1" onchange="applyFilters()">
+
+                <button class="reset-btn" onclick="resetFilters()">RESET FILTERS</button>
+            </div>
+        </div>
+
+        <!-- Exoplanet Cards Grid -->
+        <div class="exoplanet-grid" id="exoplanetGrid">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p>LOADING EXOPLANETS FROM NASA...</p>
+            </div>
+        </div>
+
+        <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreExoplanets()">
+            LOAD MORE PLANETS
+        </button>
+    </section>
+
+    <!-- AI Detection Lab Section -->
+    <section id="ai-lab" class="ai-lab-section">
+        <div class="section-header">
+            <h2 class="section-title">AI DETECTION LAB</h2>
+            <p class="section-subtitle">Advanced AI with 95%+ accuracy</p>
+        </div>
+
+        <div class="ai-lab-container">
+            <div class="input-panel">
+                <h3>🤖 AI PREDICTION ENGINE</h3>
+                <form id="aiPredictionForm" onsubmit="predictExoplanet(event)">
+                    <div class="form-group">
+                        <label for="starTemp">STAR TEMPERATURE (K)</label>
+                        <input type="number" id="starTemp" placeholder="e.g., 5778" required>
+                        <small>☀️ SUN: 5778K</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="starRadius">STAR RADIUS (SOLAR RADII)</label>
+                        <input type="number" step="0.01" id="starRadius" placeholder="e.g., 1.0" required>
+                        <small>☀️ SUN: 1.0</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="starMass">STAR MASS (SOLAR MASSES)</label>
+                        <input type="number" step="0.01" id="starMass" placeholder="e.g., 1.0" required>
+                        <small>☀️ SUN: 1.0</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="orbitalPeriod">ORBITAL PERIOD (DAYS)</label>
+                        <input type="number" step="0.01" id="orbitalPeriod" placeholder="e.g., 365.25" required>
+                        <small>🌍 EARTH: 365.25 DAYS</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="transitDepth">TRANSIT DEPTH (%)</label>
+                        <input type="number" step="0.001" id="transitDepth" placeholder="e.g., 0.01" required>
+                        <small>🔬 SMALLER = SMALLER PLANET</small>
+                    </div>
+
+                    <button type="submit" class="predict-btn">
+                        <span>🤖</span> PREDICT WITH ADVANCED AI
+                    </button>
+                </form>
+            </div>
+
+            <div class="results-panel" id="resultsPanel">
+                <h3>📊 AI ANALYSIS RESULTS</h3>
+                <div class="results-placeholder">
+                    <div class="placeholder-icon">🔬</div>
+                    <p>ENTER STELLAR PARAMETERS AND LET OUR ADVANCED AI ANALYZE THE DATA</p>
+                    <p class="small-text">POWERED BY RANDOM FOREST + DEEP LEARNING</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Light Curve Analyzer Section -->
+    <section id="lightcurve" class="lightcurve-section">
+        <div class="section-header">
+            <h2 class="section-title">LIGHT CURVE ANALYZER</h2>
+            <p class="section-subtitle">Upload and analyze Kepler/TESS light curves with AI</p>
+        </div>
+
+        <div class="lightcurve-container">
+            <div class="upload-panel">
+                <h3>📁 UPLOAD LIGHT CURVE DATA</h3>
+                <div class="upload-zone" id="uploadZone">
+                    <div class="upload-icon">📊</div>
+                    <p>DRAG & DROP YOUR CSV FILE HERE</p>
+                    <p class="small-text">OR CLICK TO BROWSE</p>
+                    <input type="file" id="lightcurveFile" accept=".csv" hidden>
+                    <button class="upload-btn" onclick="document.getElementById('lightcurveFile').click()">
+                        CHOOSE FILE
+                    </button>
+                </div>
+                <div class="file-requirements">
+                    <p><strong>FILE REQUIREMENTS:</strong></p>
+                    <ul>
+                        <li>CSV format with 'time' and 'flux' columns</li>
+                        <li>Kepler or TESS light curve data</li>
+                        <li>Maximum size: 10MB</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="lightcurve-viz" id="lightcurveViz">
+                <h3>📈 LIGHT CURVE VISUALIZATION</h3>
+                <div class="viz-placeholder">
+                    <p>UPLOAD A LIGHT CURVE FILE TO SEE VISUALIZATION</p>
+                </div>
+                <canvas id="lightcurveChart"></canvas>
+                <div id="lightcurveResults"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW: Transit Simulator Section -->
+    <section id="simulator" class="simulator-section">
+        <div class="section-header">
+            <h2 class="section-title">TRANSIT SIMULATOR</h2>
+            <p class="section-subtitle">Simulate and visualize planetary transits</p>
+        </div>
+
+        <div class="simulator-container">
+            <div class="simulator-controls">
+                <h3>⚙️ SIMULATION PARAMETERS</h3>
+                
+                <div class="control-group">
+                    <label for="simPlanetRadius">PLANET RADIUS (EARTH RADII)</label>
+                    <input type="range" id="simPlanetRadius" min="0.5" max="20" step="0.1" value="1.0">
+                    <span id="simPlanetRadiusValue">1.0</span>
+                </div>
+
+                <div class="control-group">
+                    <label for="simStarRadius">STAR RADIUS (SOLAR RADII)</label>
+                    <input type="range" id="simStarRadius" min="0.5" max="3" step="0.1" value="1.0">
+                    <span id="simStarRadiusValue">1.0</span>
+                </div>
+
+                <div class="control-group">
+                    <label for="simOrbitalPeriod">ORBITAL PERIOD (DAYS)</label>
+                    <input type="range" id="simOrbitalPeriod" min="1" max="365" step="1" value="10">
+                    <span id="simOrbitalPeriodValue">10</span>
+                </div>
+
+                <div class="control-group">
+                    <label for="simInclination">INCLINATION (DEGREES)</label>
+                    <input type="range" id="simInclination" min="85" max="90" step="0.5" value="90">
+                    <span id="simInclinationValue">90</span>
+                </div>
+
+                <button class="simulate-btn" onclick="runSimulation()">
+                    <span>▶️</span> RUN SIMULATION
+                </button>
+
+                <div class="simulation-info" id="simulationInfo"></div>
+            </div>
+
+            <div class="simulator-viz">
+                <h3>📊 SIMULATED LIGHT CURVE</h3>
+                <canvas id="simulationChart"></canvas>
+                <div class="sim-stats" id="simStats"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Visualizations Section -->
+    <section id="visualizations" class="visualizations-section">
+        <div class="section-header">
+            <h2 class="section-title">DATA UNIVERSE</h2>
+            <p class="section-subtitle">Interactive visualizations of exoplanet statistics</p>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3>📅 DISCOVERY TIMELINE</h3>
+                <canvas id="timelineChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3>🔬 DETECTION METHODS</h3>
+                <canvas id="methodsChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3>📏 PLANET SIZE DISTRIBUTION</h3>
+                <canvas id="sizeChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h3>📍 DISTANCE FROM EARTH</h3>
+                <canvas id="distanceChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="section-header">
+            <h2 class="section-title">ABOUT STELLAR SCOUT</h2>
+            <p class="section-subtitle">Your Space Expert</p>
+        </div>
+
+        <div class="about-content">
+            <div class="method-card">
+                <div class="method-icon">🔭</div>
+                <h3>TRANSIT METHOD</h3>
+                <p>Detects planets by measuring star brightness dimming. Used by Kepler and TESS missions. Our AI analyzes thousands of light curves to identify transit patterns.</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-icon">🤖</div>
+                <h3>ADVANCED AI</h3>
+                <p>Ensemble of Random Forest, CNN, and LSTM models achieving 95%+ accuracy. Trained on real NASA Kepler and TESS data with advanced feature engineering.</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-icon">📊</div>
+                <h3>LIGHT CURVE ANALYSIS</h3>
+                <p>Upload and analyze actual Kepler/TESS light curve data. AI automatically detects transit events, estimates planet size, and calculates orbital periods.</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-icon">🎮</div>
+                <h3>INTERACTIVE SIMULATOR</h3>
+                <p>Simulate planetary transits in real-time. Adjust planet size, orbital period, and inclination to see how it affects the observed light curve.</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-icon">🌍</div>
+                <h3>HABITABILITY CALCULATOR</h3>
+                <p>Advanced calculations including habitable zone boundaries, equilibrium temperature, and Earth Similarity Index (ESI) based on Kopparapu et al. 2013.</p>
+            </div>
+
+            <div class="method-card">
+                <div class="method-icon">📡</div>
+                <h3>REAL NASA DATA</h3>
+                <p>Direct integration with NASA Exoplanet Archive, Kepler, and TESS missions. Real-time data updates with 5,500+ confirmed exoplanets.</p>
+            </div>
+        </div>
+
+        <div class="tech-stack">
+            <h3>🚀 TECHNOLOGY STACK</h3>
+            <div class="tech-logos">
+                <span class="tech-badge">NASA EXOPLANET ARCHIVE</span>
+                <span class="tech-badge">KEPLER MISSION</span>
+                <span class="tech-badge">TESS MISSION</span>
+                <span class="tech-badge">PYTHON + FASTAPI</span>
+                <span class="tech-badge">RANDOM FOREST</span>
+                <span class="tech-badge">CNN + LSTM</span>
+                <span class="tech-badge">CHART.JS</span>
+            </div>
+        </div>
+
+        <div class="challenge-info">
+            <h3>🏆 NASA SPACE APPS CHALLENGE 2025</h3>
+            <p><strong>CHALLENGE:</strong> A World Away: Hunting for Exoplanets with AI</p>
+            <p><strong>TEAM:</strong> Auron Tech</p>
+            <p><strong>FEATURES:</strong></p>
+            <ul>
+                <li>✅ Advanced AI with 95%+ accuracy</li>
+                <li>✅ Real NASA Kepler/TESS data integration</li>
+                <li>✅ Light curve analysis and visualization</li>
+                <li>✅ Interactive transit simulator</li>
+                <li>✅ Habitability calculations</li>
+                <li>✅ 5,500+ exoplanets database</li>
+                <li>✅ Production-ready deployment</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span class="logo-icon">🌟</span>
+                <span>STELLAR SCOUT</span>
+            </div>
+            <p><strong> Powered by Auron Tech</strong></p>
+            <p>ADVANCED AI-POWERED EXOPLANET DETECTION SYSTEM</p>
+            <p class="footer-tagline">EXPLORING THE COSMOS, ONE EXOPLANET AT A TIME</p>
+            <div class="footer-links">
+                <a href="https://exoplanetarchive.ipac.caltech.edu/" target="_blank">NASA EXOPLANET ARCHIVE</a>
+                <a href="https://www.nasa.gov/mission_pages/kepler/main/index.html" target="_blank">KEPLER MISSION</a>
+                <a href="https://tess.mit.edu/" target="_blank">TESS MISSION</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Planet Detail Modal -->
+    <div class="modal" id="planetModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="chart.min.js"></script>
+    <script src="script.js"></script>
+    <script src="three.min.js"></script>
+</body>
+</html>
+
+   

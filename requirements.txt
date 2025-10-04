@@ -1,0 +1,25 @@
+# Astronomy data
+astroquery
+astropy
+lightkurve
+
+# Deep learning
+tensorflow
+keras
+
+# Data visualization
+plotly
+matplotlib
+
+# File handling
+h5py
+gunicorn
+aiohttp
+fastapi
+uvicorn[standard]
+requests
+numpy
+pandas
+scikit-learn
+python-multipart
+pydantic
