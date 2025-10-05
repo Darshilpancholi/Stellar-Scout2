@@ -29,7 +29,7 @@ class Settings:
     APP_NAME = "Stellar Scout"
     VERSION = "1.0.0"
     DEBUG = os.getenv("DEBUG", "False").lower() == "true"
-    ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "https://reliable-babka-7d7933.netlify.app").split(",")
+    ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
     NASA_EXOPLANET_API = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync"
     CACHE_DURATION = 3600
 
